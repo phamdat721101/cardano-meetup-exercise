@@ -22,6 +22,17 @@ Welcome to the Hydra Layer 2 hands-on exercise! In this lab, you'll learn about 
 **Difficulty Level:** Intermediate  
 **Group Size:** 2-5 participants recommended
 
+### Important Disclaimer
+
+This document is designed for **educational purposes** and provides a conceptual overview of Hydra Layer 2 technology. Some examples and API calls are simplified for learning clarity. For production implementations:
+
+- Always consult the [official Hydra documentation](https://hydra.family/head-protocol/)
+- Use the actual API specifications for your Hydra version
+- Test thoroughly on testnets before any mainnet deployment
+- Understand the security implications and requirements
+
+The Hydra protocol and API continue to evolve. Always refer to the latest official documentation for accurate implementation details.
+
 ---
 
 ## What is Cardano?
@@ -139,8 +150,8 @@ docker-compose --version
 #### Step 2: Pull Hydra Docker Images
 
 ```bash
-# Pull the latest Hydra node image
-docker pull ghcr.io/input-output-hk/hydra-node:latest
+# Pull a specific Hydra node image version (recommended for stability)
+docker pull ghcr.io/input-output-hk/hydra-node:0.15.0
 
 # Verify the image
 docker images | grep hydra-node
@@ -148,8 +159,10 @@ docker images | grep hydra-node
 
 **Expected Output:**
 ```
-ghcr.io/input-output-hk/hydra-node   latest    abc123def456   2 days ago    500MB
+ghcr.io/input-output-hk/hydra-node   0.15.0    abc123def456   2 days ago    500MB
 ```
+
+**Note:** Using a specific version tag ensures consistent behavior across all participants.
 
 #### Step 3: Set Up Working Directory
 
@@ -287,13 +300,18 @@ node3/keys/:
 
 Create a Docker Compose file to orchestrate the Hydra network:
 
+**Note:** This is a simplified demo configuration. For a production setup, you'll need to:
+1. Provide proper Cardano node connection details
+2. Mount protocol parameters file
+3. Configure cardano-node integration
+
 ```bash
 cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
 services:
   hydra-node-1:
-    image: ghcr.io/input-output-hk/hydra-node:latest
+    image: ghcr.io/input-output-hk/hydra-node:0.15.0
     container_name: alice
     ports:
       - "4001:4001"  # API port
@@ -312,13 +330,11 @@ services:
       --peer hydra-node-3:5003
       --hydra-signing-key /keys/hydra.sk
       --hydra-verification-key /keys/hydra.vk
-      --network-id 1  # Mainnet = 1, Preprod = 0
-      --ledger-protocol-parameters-file /config/protocol-parameters.json
     networks:
       - hydra-net
 
   hydra-node-2:
-    image: ghcr.io/input-output-hk/hydra-node:latest
+    image: ghcr.io/input-output-hk/hydra-node:0.15.0
     container_name: bob
     ports:
       - "4002:4002"
@@ -337,13 +353,11 @@ services:
       --peer hydra-node-3:5003
       --hydra-signing-key /keys/hydra.sk
       --hydra-verification-key /keys/hydra.vk
-      --network-id 1
-      --ledger-protocol-parameters-file /config/protocol-parameters.json
     networks:
       - hydra-net
 
   hydra-node-3:
-    image: ghcr.io/input-output-hk/hydra-node:latest
+    image: ghcr.io/input-output-hk/hydra-node:0.15.0
     container_name: carol
     ports:
       - "4003:4003"
@@ -362,8 +376,6 @@ services:
       --peer hydra-node-2:5002
       --hydra-signing-key /keys/hydra.sk
       --hydra-verification-key /keys/hydra.vk
-      --network-id 1
-      --ledger-protocol-parameters-file /config/protocol-parameters.json
     networks:
       - hydra-net
 
@@ -372,6 +384,11 @@ networks:
     driver: bridge
 EOF
 ```
+
+**Important Notes:**
+- This configuration assumes nodes are running in offline/demo mode
+- For full functionality with actual funds, you need to connect to a cardano-node
+- See the official Hydra documentation for production configuration
 
 ### Step 3: Start the Hydra Nodes
 
@@ -433,11 +450,9 @@ The Init command starts the process of creating a Head:
 
 ```bash
 # Alice initializes the Head
-curl -X POST http://localhost:4001/commit \
+curl -X POST http://localhost:4001 \
   -H "Content-Type: application/json" \
-  -d '{
-    "Init": {}
-  }'
+  -d '{"tag": "Init"}'
 ```
 
 **Expected Response:**
@@ -454,6 +469,8 @@ curl -X POST http://localhost:4001/commit \
 - A unique Head ID is created
 - All parties are notified to commit funds
 - The Head is in "Initializing" state
+
+**Note:** The actual Hydra API and response formats may vary. Consult the official Hydra API documentation for the exact endpoints and data structures for your version.
 
 ### Step 2: Commit Funds to the Head
 
@@ -548,15 +565,18 @@ curl -s http://localhost:4001/snapshot/utxo | jq
 
 Now the exciting part - rapid transactions within the Head:
 
+**Note:** The transaction format shown here is conceptual. Hydra uses Cardano's UTxO model which requires proper transaction construction with inputs, outputs, and witnesses. For actual implementation, use the Hydra API with properly formatted Cardano transactions.
+
+**Conceptual Example:**
 ```bash
-# Alice sends 10 ADA to Bob
-curl -X POST http://localhost:4001/transact \
+# Alice creates and submits a transaction to Bob
+# In practice, you would construct a proper Cardano transaction
+curl -X POST http://localhost:4001 \
   -H "Content-Type: application/json" \
   -d '{
+    "tag": "NewTx",
     "transaction": {
-      "from": "alice",
-      "to": "bob",
-      "amount": 10000000
+      "cborHex": "<properly_encoded_cardano_transaction>"
     }
   }'
 ```
@@ -572,42 +592,32 @@ curl -X POST http://localhost:4001/transact \
 
 **Transaction Confirmation Time:** ~10-100ms (compared to 20+ seconds on Layer 1!)
 
+**What This Demonstrates:**
+- Transactions within a Head are nearly instantaneous
+- Multiple transactions can be processed per second
+- All participants see the same state updates
+- Transactions use standard Cardano transaction format
+
+**For Educational Purposes:**
+During your meetup, participants can simulate transactions by:
+1. Using the Hydra TUI (Terminal User Interface) tool
+2. Building simple transactions with `cardano-cli` and submitting via Hydra API
+3. Using example scripts provided in the Hydra repository
+
 ```bash
-# Bob sends 5 ADA to Carol
-curl -X POST http://localhost:4002/transact \
-  -H "Content-Type: application/json" \
-  -d '{
-    "transaction": {
-      "from": "bob",
-      "to": "carol",
-      "amount": 5000000
-    }
-  }'
-
-# Carol sends 15 ADA to Alice
-curl -X POST http://localhost:4003/transact \
-  -H "Content-Type: application/json" \
-  -d '{
-    "transaction": {
-      "from": "carol",
-      "to": "alice",
-      "amount": 15000000
-    }
-  }'
-
-# Check updated balances
+# Example: Check balances after transactions
 curl -s http://localhost:4001/snapshot/utxo | jq
 ```
 
-**Expected Output:**
+**Conceptual Result (after multiple transactions):**
 ```json
 {
   "headId": "1234567890abcdef",
   "snapshotNumber": 3,
   "utxo": {
-    "alice": 105000000,  # 100 - 10 + 15 = 105 ADA
-    "bob": 55000000,     # 50 + 10 - 5 = 55 ADA
-    "carol": 65000000    # 75 + 5 - 15 = 65 ADA
+    "<alice_utxo_ref>": {"lovelace": 105000000},
+    "<bob_utxo_ref>": {"lovelace": 55000000},
+    "<carol_utxo_ref>": {"lovelace": 65000000}
   },
   "confirmedTransactions": ["tx001", "tx002", "tx003"]
 }
