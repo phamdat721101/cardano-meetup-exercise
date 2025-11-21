@@ -1,35 +1,101 @@
-## Task 1: Create your first wallet
-- Name of wallet (Lace/Nami):
-- Wallet address:
-- Screenshot of wallet creation:
+# Hydra Layer 2 Coding Exercise Template
 
-## Task 2: Get testnet ADA (faucet)
-- Faucet used:
-- Amount received:
-- Transaction ID (URL):
-- Screenshot of receipt:
+## Exercise Title
 
-## Task 3: Send your first transaction
-- From address:
-- To address:
-- Transaction ID (URL):
-- Screenshot of transaction:
-
-## Task 4: Explore Blockfrost dashboard
-- Blockfrost dashboard URL:
-- Screenshot of dashboard:
-- Brief summary of what you explored:
-
-## Task 5: Download Development Tools
-- Tools downloaded (list):
-- Screenshot of installation:
+_Example: Running Hydra Nodes Locally and Executing Fast Transactions_
 
 ---
-### Submission Requirements
-- Screenshots for each step (wallets, faucet, transaction, dashboard, tools)
-- Transaction URLs for faucet and your first send
-- Wallet addresses (as applicable)
-- Summary of steps performed
+
+## Overview
+
+Briefly describe the objective of this exercise.  
+_Example: Get familiar with the Hydra Layer 2 protocol by setting up Hydra nodes, opening a Head, and executing fast transactions collaboratively._
 
 ---
-**Feel free to fork this repository and submit your proof by opening an issue and uploading required screenshots, transaction URLs, and addresses as outlined above.**
+
+## Prerequisites
+
+- List what participants should have installed (e.g. Docker, Cardano CLI, Hydra binaries).
+- Mention any accounts or access required (test wallets, tokens, etc.)
+
+---
+
+## Learning Objectives
+
+- [ ] Understand Hydra Layer 2 concepts on Cardano
+- [ ] Set up and run Hydra nodes
+- [ ] Open, commit, transact, and close a Hydra Head
+- [ ] Observe quick, low-fee transaction processing
+
+---
+
+## Step-by-Step Instructions
+
+### 1. Setup Environment
+
+Describe build/run steps.  
+_E.g.: Clone repository, install dependencies, prepare wallets, etc._
+
+### 2. Initialize Hydra Nodes
+
+Commands and explanation, e.g.:
+```bash
+hydra-node --testnet-magic 42 ...
+```
+Describe expected output and troubleshooting tips.
+
+### 3. Open a Hydra Head
+
+_Example commands/steps_  
+What participants should see as confirmation.
+
+### 4. Commit Funds and Transact
+
+Show example transactions, CLI commands, output, and interpretation.
+
+### 5. Close Hydra Head
+
+Demonstrate proper shutdown and closing protocols.
+
+### 6. Review/Discussion
+
+Questions to ask, things to look out for, or debug scenarios.
+
+---
+
+## Collaborative Activity
+
+Describe a group simulation, e.g.:
+- Break into teams, simulate multi-party commits & transactions.
+- Discuss speed, security, and scalability features.
+
+---
+
+## Challenge Tasks (Optional)
+
+Suggest extension ideas for advanced users, e.g.:
+- Build a custom transaction scenario
+- Automate transactions with a script
+
+---
+
+## Resources & References
+
+- [Hydra Official Documentation](https://hydra.family)
+- [Cardano Docs](https://docs.cardano.org)
+- [Hydra GitHub](https://github.com/input-output-hk/hydra)
+- Workshop slides, sample repos, etc.
+
+---
+
+## Solution Section (Add After Workshop)
+
+Provide sample solutions, scripts, or CLI output for instructor reference.
+
+---
+
+## Feedback/Summary
+
+How did the exercise go? What did you learn?
+
+---
