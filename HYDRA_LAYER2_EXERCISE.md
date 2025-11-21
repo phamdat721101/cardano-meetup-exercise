@@ -433,6 +433,17 @@ curl -s http://localhost:4001/snapshot/utxo | jq
 
 Now let's go through the complete Hydra Head lifecycle!
 
+### Important Note About Examples
+
+The commands and API calls shown in this workflow are **conceptual and educational**. They demonstrate the workflow and logic of Hydra operations but may not match the exact API specifications of your Hydra version. For production implementations:
+
+- Always refer to the official [Hydra API documentation](https://hydra.family/head-protocol/api-reference/)
+- Use proper Cardano transaction formats (CBOR-encoded)
+- Test thoroughly on testnets before any mainnet use
+- Ensure proper key management and security practices
+
+This exercise is designed to help you understand the concepts and workflow of Hydra Layer 2.
+
 ### Workflow Overview
 
 ```
@@ -982,6 +993,6 @@ This educational material is provided under MIT License.
 
 ---
 
-*Last Updated: January 2024*  
+*Last Updated: November 2024*  
 *Hydra Version: 0.15.0*  
 *Cardano Node Version: 8.0+*
